@@ -20,25 +20,11 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,14 +47,19 @@ public class EarthquakeActivity extends AppCompatActivity {
 
     private EarthquakeAdapter mAdapter;
 
+    TextView emptytext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.earthquake_activity);
 
-        // Find a reference to the {@link ListView} in the layout
+         // Find a reference to the {@link ListView} in the layout
         ListView earthquakeListView = (ListView) findViewById(R.id.list);
+        emptytext = (TextView) findViewById(R.id.emptytext);
+
+        earthquakeListView.setEmptyView(emptytext);
+
 
         // Create a new adapter that takes an empty list of earthquakes as input
         mAdapter = new EarthquakeAdapter(this,new ArrayList<EarthQuake>());
@@ -145,9 +136,14 @@ public class EarthquakeActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(List<EarthQuake> earthQuakes) {
 
-            mAdapter.clear();
+           // mAdapter.clear();
 
-            if (earthQuakes != null && !earthQuakes.isEmpty())
+            if (earthQuakes == null || earthQuakes.isEmpty()){
+                emptytext.setText(R.string.nothingfound);
+            }
+
+            //if (earthQuakes != null && !earthQuakes.isEmpty())
+            else
             {
                 mAdapter.addAll(earthQuakes);
             }
